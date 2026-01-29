@@ -140,7 +140,3 @@ A dark color scheme reduces eye strain and provides a modern developer-friendly 
 
 ### 4. Minimal Dependencies
 Only essential dependencies are used to keep the bundle size small and maintainable.
-
-## License
-
-MIT
