@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PasteVault - Frontend
 
-## Getting Started
+A modern, responsive web interface for PasteVault - a secure paste sharing service. Built with Next.js and Tailwind CSS.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Create text pastes with optional expiration and view limits
+- Clean, dark-themed UI
+- Copy URL/content to clipboard
+- Responsive design (mobile-friendly)
+- Server-side rendering for paste viewing
+- Real-time form validation
+
+## Tech Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Deployment:** Vercel
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Home page - Create new paste |
+| `/p/[id]` | View paste page (SSR) |
+
+## Running Locally
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Backend API running (see [backend README](../vault/README.md))
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/pastevault-frontend.git
+   cd pastevault-frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Create environment file:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Edit `.env.local`:
+   ```
+   BACKEND_URL=http://localhost:8080
+   ```
+
+4. **Run development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open browser:**
+   ```
+   http://localhost:3000
+   ```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `BACKEND_URL` | Backend API URL | `http://localhost:8080` |
+
+## Project Structure
+
+```
+vault-frontend/
+├── app/
+│   ├── layout.tsx        # Root layout with header
+│   ├── page.tsx          # Home page (create paste)
+│   ├── globals.css       # Global styles
+│   └── p/
+│       └── [id]/
+│           └── page.tsx  # View paste page
+├── components/
+│   ├── PasteForm.tsx     # Create paste form
+│   ├── PasteView.tsx     # Display paste content
+│   └── CopyButton.tsx    # Copy to clipboard button
+├── lib/
+│   └── api.ts            # API client functions
+└── next.config.ts        # API proxy configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Integration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The frontend proxies API requests to the backend:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Frontend Route | Backend Route |
+|----------------|---------------|
+| `/api/healthz` | `BACKEND_URL/api/healthz` |
+| `/api/pastes` | `BACKEND_URL/api/pastes` |
+| `/api/pastes/:id` | `BACKEND_URL/api/pastes/:id` |
 
-## Learn More
+This is configured in `next.config.ts` using Next.js rewrites.
 
-To learn more about Next.js, take a look at the following resources:
+## Build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+### Vercel (Recommended)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Import repository on [vercel.com](https://vercel.com)
+2. Add environment variable:
+   - `BACKEND_URL`: Your backend API URL
+3. Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Manual
+
+```bash
+npm run build
+npm start
+```
+
+## Design Decisions
+
+### 1. Server-Side Rendering
+The `/p/[id]` page uses SSR to fetch paste data, ensuring the view count is incremented correctly and content is available for SEO.
+
+### 2. API Proxy
+Next.js rewrites proxy API requests to the backend, keeping all routes on the same domain and avoiding CORS issues in production.
+
+### 3. Dark Theme
+A dark color scheme reduces eye strain and provides a modern developer-friendly aesthetic.
+
+### 4. Minimal Dependencies
+Only essential dependencies are used to keep the bundle size small and maintainable.
+
+## License
+
+MIT
